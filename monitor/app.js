@@ -28,9 +28,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 
+app.use(function(req, res, next){
+  res.io = io;
+  next();
+});
+
+
 // accepts the data from dustbin stub
 app.post('/data', function (req, res) {
-  var data  = JSON.parse(Object.keys(req.body)[0]);		
+  var data  = JSON.parse(Object.keys(req.body)[0]);
+  res.io.emit('binData',data);		
   console.log(data);		
   res.send('Cool!')
 });
